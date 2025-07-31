@@ -2,7 +2,7 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>balady</groupId>
 	<artifactId>api-parent-pom</artifactId>
-	<version>2.0.10</version>
+	<version>2.4.30</version>
 	<packaging>pom</packaging>
 	<properties>
 		<sonar.host.url>http://sonarqube.momra.gov.sa</sonar.host.url>
@@ -17,7 +17,9 @@
 		<spring.version>5.1.8.RELEASE</spring.version>
 		<hibernate.version>5.3.13.Final</hibernate.version>
 		<springfox.version>2.9.2</springfox.version>
-
+		<org.mapstruct.version>1.5.5.Final</org.mapstruct.version>
+		<org.projectlombok>1.18.22</org.projectlombok>
+		
 		<profiles.release>false</profiles.release>
 		<profiles.debugDev>false</profiles.debugDev>
 		<profiles.debugQc>false</profiles.debugQc>
@@ -314,11 +316,6 @@
 			<scope>provided</scope>
 		</dependency>
 		<dependency>
-			<groupId>balady</groupId>
-			<artifactId>api-base</artifactId>
-			<version>2.0.8</version>
-		</dependency>
-		<dependency>
 			<groupId>org.bouncycastle</groupId>
 			<artifactId>bcprov-jdk15to18</artifactId>
 			<version>1.65</version>
@@ -326,7 +323,13 @@
 		<dependency>
 			<groupId>org.projectlombok</groupId>
 			<artifactId>lombok</artifactId>
-			<version>1.18.22</version>
+			<version>${org.projectlombok}</version>
+			<scope>provided</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.mapstruct</groupId>
+			<artifactId>mapstruct</artifactId>
+			<version>${org.mapstruct.version}</version>
 			<scope>provided</scope>
 		</dependency>
 		<dependency>
@@ -343,7 +346,7 @@
 			<groupId>org.apache.commons</groupId>
 			<artifactId>commons-text</artifactId>
 			<version>1.9</version>
-		</dependency>		
+		</dependency>
 	</dependencies>
 	<repositories>
 		<repository>
@@ -411,6 +414,50 @@
 							</addDefaultSpecificationEntries>
 						</manifest>
 					</archive>
+				</configuration>
+			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-compiler-plugin</artifactId>
+				<version>3.10.1</version>
+				<configuration>
+					<source>${maven.compiler.source}</source>
+					<target>${maven.compiler.target}</target>
+					<annotationProcessorPaths>
+						<path>
+							<groupId>org.mapstruct</groupId>
+							<artifactId>mapstruct-processor</artifactId>
+							<version>${org.mapstruct.version}</version>
+						</path>
+						<path>
+							<groupId>org.projectlombok</groupId>
+							<artifactId>lombok</artifactId>
+							<version>${org.projectlombok}</version>
+						</path>
+						<path>
+							<groupId>org.projectlombok</groupId>
+							<artifactId>lombok-mapstruct-binding</artifactId>
+							<version>0.2.0</version>
+						</path>
+					</annotationProcessorPaths>
+					<showWarnings>true</showWarnings>
+					<compilerArgs>
+						<arg>
+							-Amapstruct.verbose=true
+						</arg>
+						<arg>
+							-Amapstruct.defaultComponentModel=spring
+						</arg>
+						<arg>
+							-Amapstruct.defaultInjectionStrategy=constructor
+						</arg>
+						<arg>
+							-Amapstruct.unmappedTargetPolicy=WARN
+						</arg>
+						<arg>
+							-Amapstruct.unmappedSourcePolicy=WARN
+						</arg>
+					</compilerArgs>
 				</configuration>
 			</plugin>
 			<plugin>
